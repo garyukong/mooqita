@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Bash script to create new website containing all images
+
 ## Set script parameters
 title="Math Collection - Index of Images"
 header="Math Collection"
