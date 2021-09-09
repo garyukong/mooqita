@@ -1,6 +1,6 @@
 #!/bin/bash
 
-## Set parameters for the HTML file
+## Set script parameters
 title="Math Collection - Index of Images"
 header="Math Collection"
 imgperrow=5
@@ -10,26 +10,24 @@ width=200
 bordercolor=black
 alignment=center
 tableborder=5
+dir=website_full/images # Location of directory containing all images
 
-## Create a variable containing all filenames
-dir=website_full/images # Set location of directory containing all images
-
-## RENAME FILES SPECIAL CHARACTERS HERE - add convmv code to ensure all images are UTF-8 charset
+## Rename all files into UTF-8 format to ensure compatibility with HTML
 cd $dir
 convmv -f windows-1252 -t utf-8 * --notest
 convmv -f cp850 -t utf-8 * --notest
 convmv -f ISO-8859-1 -t utf-8 * --notest
 cd ../..
 
-## SAVE FILENAMES VARIABLE
+## Create a variable containing all filenames for later use in a for loop
 OIFS="$IFS" # Backs up current Bash internal field separator value
 IFS=$'\n' # Ensures that each item in the list is delimited by a line break
 dirlist=`find $dir -type f | sort` # Lists all files in the directory, sorts and saves it into variable called $dirlist
 dirlist=`basename $dirlist` # Removes names of directories in $dirlist
 
 ## Create a variable containing HTML code for each filename, moving into new line after specified number of images
-counter=1
-index=1
+counter=1 # Set starting counter value at 1. Used in for loop to
+# index=1 # Set starting index value at 1. Was used for testing that the code captured all 159 images in the directory
 imgcode=$(for file in $dirlist
           do
           if [[ $counter -eq 1 ]]; then
@@ -38,20 +36,17 @@ imgcode=$(for file in $dirlist
             echo "            <td><img src='"images/$file"' alt="" border=$border height=$height width=$width></th>"
             ((counter=$counter+1))
             # ((index=$index+1))
-            # echo count = $counter
           elif [[ $counter -gt 1 && $counter -lt $imgperrow ]]; then
             # echo fileno = $index # Prints file number to ensure all files have been captured
             echo "            <td><img src='"images/$file"' alt="" border=$border height=$height width=$width></th>"
             ((counter=$counter+1))
             # ((index=$index+1))
-            # echo count = $counter
           else
             # echo fileno = $index # Prints file number to ensure all files have been captured
             echo "            <td><img src='"images/$file"' alt="" border=$border height=$height width=$width></th>"
             echo "        </tr>"
             counter=1
             # ((index=$index+1))
-            # echo count = $counter
           fi
         done)
       # echo $imgcode # Just used to check that the code has been written correctly
@@ -63,7 +58,7 @@ cat << _EOF_
     <!doctype html>
     <html>
       <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> # Added
         <title>$title</title>
       </head>
       <body>
@@ -74,7 +69,7 @@ cat << _EOF_
         <tr>
             <th colspan="$imgperrow">PICTURES</th>
         </tr>
-        $imgcode
+        $imgcode # Substitutes outputs of the for loop into HERE DOC
       </table>
       </body>
     </html>
