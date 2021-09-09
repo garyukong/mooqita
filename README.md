@@ -1,4 +1,4 @@
-# mooqita
+# MIDS1D Mooqita Challenge Submission - Gary Kong (garykong@berkeley.edu)
 
 ## Setup directories and repositories
 After setting up a new repository using GitHub desktop, changed working directory to where the local repo was stored:
